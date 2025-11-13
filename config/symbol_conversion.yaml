@@ -3,7 +3,7 @@
 
 # 系统标准格式定义
 standard_format:
-  pattern: "{base}-{quote}-{type}"  # 例如：BTC-USDC-PERP
+  pattern: "{base}-{quote}-{type}" # 例如：BTC-USDC-PERP
   separator: "-"
   supported_types: ["PERP", "SPOT", "FUTURES"]
   default_quote: "USDC"
@@ -12,20 +12,20 @@ standard_format:
 exchange_formats:
   hyperliquid:
     format_type: "hyperliquid"
-    pattern: "{base}/{quote}:{type}"  # 例如：BTC/USDC:USDC
+    pattern: "{base}/{quote}:{type}" # 例如：BTC/USDC:USDC
     separator: "/"
     type_separator: ":"
-    supported_types: ["USDC", "PERP", "SPOT"]  # 🔥 修复：Hyperliquid实际使用USDC作为type
+    supported_types: ["USDC", "PERP", "SPOT"] # 🔥 修复：Hyperliquid实际使用USDC作为type
     default_quote: "USDC"
     type_mapping:
-      PERP: "USDC"      # 🔥 修复：永续合约使用USDC格式
+      PERP: "USDC" # 🔥 修复：永续合约使用USDC格式
       SPOT: "SPOT"
-      PERPETUAL: "USDC"  # 🔥 修复：永续合约使用USDC格式
+      PERPETUAL: "USDC" # 🔥 修复：永续合约使用USDC格式
       USDC: "USDC"
-    
+
   backpack:
     format_type: "backpack"
-    pattern: "{base}_{quote}_{type}"  # 例如：BTC_USDC_PERP
+    pattern: "{base}_{quote}_{type}" # 例如：BTC_USDC_PERP
     separator: "_"
     supported_types: ["PERP", "SPOT"]
     default_quote: "USDC"
@@ -33,46 +33,57 @@ exchange_formats:
       PERP: "PERP"
       SPOT: ""
       PERPETUAL: "PERP"
-    
+
   edgex:
     format_type: "edgex"
-    pattern: "{base}_{quote}"  # 🔥 修复：EdgeX实际格式为BTC_USDT，没有_PERP后缀
+    pattern: "{base}_{quote}" # 🔥 修复：EdgeX实际格式为BTC_USDT，没有_PERP后缀
     separator: "_"
-    supported_types: [""]  # 🔥 修复：EdgeX不使用类型后缀
-    default_quote: "USDT"  # EdgeX主要使用USDT
+    supported_types: [""] # 🔥 修复：EdgeX不使用类型后缀
+    default_quote: "USDT" # EdgeX主要使用USDT
     quote_mapping:
-      USDC: "USDT"  # 将USDC映射为USDT
+      USDC: "USDT" # 将USDC映射为USDT
     type_mapping:
-      PERP: ""      # 🔥 修复：EdgeX永续合约不使用类型后缀
-      SPOT: ""      # 🔥 修复：EdgeX不使用类型后缀
-      PERPETUAL: ""  # 🔥 修复：EdgeX不使用类型后缀
-    
+      PERP: "" # 🔥 修复：EdgeX永续合约不使用类型后缀
+      SPOT: "" # 🔥 修复：EdgeX不使用类型后缀
+      PERPETUAL: "" # 🔥 修复：EdgeX不使用类型后缀
+
   lighter:
     format_type: "lighter"
-    pattern: "{base}-{quote}"  # 例如：BTC-USD
+    pattern: "{base}-{quote}" # 例如：BTC-USD
     separator: "-"
-    supported_types: [""]  # Lighter不使用类型后缀（主要是永续合约）
+    supported_types: [""] # Lighter不使用类型后缀（主要是永续合约）
     default_quote: "USD"
     quote_mapping:
-      USDC: "USD"  # 将USDC映射为USD
-      USDT: "USD"  # 将USDT映射为USD
+      USDC: "USD" # 将USDC映射为USD
+      USDT: "USD" # 将USDT映射为USD
     type_mapping:
-      PERP: ""      # Lighter永续合约不使用类型后缀
+      PERP: "" # Lighter永续合约不使用类型后缀
       SPOT: ""
       PERPETUAL: ""
-    
+
   binance:
     format_type: "binance"
-    pattern: "{base}{quote}"  # 例如：BTCUSDT
+    pattern: "{base}{quote}" # 例如：BTCUSDT
     separator: ""
     supported_types: ["SPOT", "PERP"]
     default_quote: "USDT"
     quote_mapping:
-      USDC: "USDT"  # 将USDC映射为USDT
+      USDC: "USDT" # 将USDC映射为USDT
     type_mapping:
-      PERP: ""  # 永续合约不需要后缀
+      PERP: "" # 永续合约不需要后缀
       SPOT: ""
       PERPETUAL: ""
+
+  grvt:
+    format_type: "grvt"
+    pattern: "{base}_{quote}_{type}" # 例如：BTC_USDT_Perp
+    separator: "_"
+    supported_types: ["Perp"] # GRVT使用Perp作为永续合约后缀
+    default_quote: "USDT"
+    type_mapping:
+      PERP: "Perp" # 永续合约使用Perp后缀
+      SPOT: "" # GRVT主要支持永续合约
+      PERPETUAL: "Perp" # 永续合约使用Perp后缀
 
 # 符号映射规则（优先级高于格式转换）
 symbol_mappings:
@@ -86,7 +97,7 @@ symbol_mappings:
       "DOGE-USDC-PERP": "DOGE/USDC:USDC"
       "ADA-USDC-PERP": "ADA/USDC:USDC"
       "LINK-USDC-PERP": "LINK/USDC:USDC"
-    
+
     backpack:
       "BTC-USDC-PERP": "BTC_USDC_PERP"
       "ETH-USDC-PERP": "ETH_USDC_PERP"
@@ -95,7 +106,7 @@ symbol_mappings:
       "DOGE-USDC-PERP": "DOGE_USDC_PERP"
       "ADA-USDC-PERP": "ADA_USDC_PERP"
       "LINK-USDC-PERP": "LINK_USDC_PERP"
-    
+
     edgex:
       "BTC-USDC-PERP": "BTC_USDT_PERP"
       "ETH-USDC-PERP": "ETH_USDT_PERP"
@@ -104,7 +115,7 @@ symbol_mappings:
       "DOGE-USDC-PERP": "DOGE_USDT_PERP"
       "ADA-USDC-PERP": "ADA_USDT_PERP"
       "LINK-USDC-PERP": "LINK_USDT_PERP"
-    
+
     lighter:
       "BTC-USDC-PERP": "BTC-USD"
       "ETH-USDC-PERP": "ETH-USD"
@@ -113,7 +124,16 @@ symbol_mappings:
       "DOGE-USDC-PERP": "DOGE-USD"
       "ADA-USDC-PERP": "ADA-USD"
       "LINK-USDC-PERP": "LINK-USD"
-  
+
+    grvt:
+      "BTC-USDC-PERP": "BTC_USDT_Perp"
+      "ETH-USDC-PERP": "ETH_USDT_Perp"
+      "SOL-USDC-PERP": "SOL_USDT_Perp"
+      "AVAX-USDC-PERP": "AVAX_USDT_Perp"
+      "DOGE-USDC-PERP": "DOGE_USDT_Perp"
+      "ADA-USDC-PERP": "ADA_USDT_Perp"
+      "LINK-USDC-PERP": "LINK_USDT_Perp"
+
   # 交易所格式到标准格式的反向映射
   exchange_to_standard:
     lighter:
@@ -145,7 +165,7 @@ symbol_mappings:
       "NEAR-USD": "NEAR-USDC-PERP"
       "UNI-USD": "UNI-USDC-PERP"
       "EIGEN-USD": "EIGEN-USDC-PERP"
-    
+
     edgex:
       # EdgeX API 返回的符号（无_PERP后缀）
       "BTCUSD": "BTC-USDC-PERP"
@@ -161,7 +181,7 @@ symbol_mappings:
       "NEARUSD": "NEAR-USDC-PERP"
       "UNIUSD": "UNI-USDC-PERP"
       "EIGENUSD": "EIGEN-USDC-PERP"
-    
+
     backpack:
       # Backpack API 返回的符号
       "BTC_USDC_PERP": "BTC-USDC-PERP"
@@ -177,7 +197,7 @@ symbol_mappings:
       "NEAR_USDC_PERP": "NEAR-USDC-PERP"
       "UNI_USDC_PERP": "UNI-USDC-PERP"
       "EIGEN_USDC_PERP": "EIGEN-USDC-PERP"
-    
+
     binance:
       "BTC-USDC-PERP": "BTCUSDT"
       "ETH-USDC-PERP": "ETHUSDT"
@@ -185,50 +205,65 @@ symbol_mappings:
       "AVAX-USDC-PERP": "AVAXUSDT"
       "DOGE-USDC-PERP": "DOGEUSDT"
 
+    grvt:
+      # GRVT API 返回的符号（带_Perp后缀）
+      "BTC_USDT_Perp": "BTC-USDC-PERP"
+      "ETH_USDT_Perp": "ETH-USDC-PERP"
+      "SOL_USDT_Perp": "SOL-USDC-PERP"
+      "AVAX_USDT_Perp": "AVAX-USDC-PERP"
+      "DOGE_USDT_Perp": "DOGE-USDC-PERP"
+      "ADA_USDT_Perp": "ADA-USDC-PERP"
+      "LINK_USDT_Perp": "LINK-USDC-PERP"
+
 # 验证规则
 validation:
   standard_format:
-    min_length: 7  # 最小长度：BTC-USD
+    min_length: 7 # 最小长度：BTC-USD
     max_length: 50
     required_separators: ["-"]
     valid_base_pattern: "^[A-Z0-9]+$"
     valid_quote_pattern: "^[A-Z0-9]+$"
     valid_types: ["PERP", "SPOT", "FUTURES"]
-  
+
   exchange_formats:
     hyperliquid:
-      min_length: 7  # 最小长度：BTC/USD
+      min_length: 7 # 最小长度：BTC/USD
       max_length: 50
       required_separators: ["/", ":"]
-    
+
     backpack:
-      min_length: 7  # 最小长度：BTC_USD
+      min_length: 7 # 最小长度：BTC_USD
       max_length: 50
       required_separators: ["_"]
-    
+
     edgex:
-      min_length: 7  # 最小长度：BTC_USD
+      min_length: 7 # 最小长度：BTC_USD
       max_length: 50
       required_separators: ["_"]
-    
+
     lighter:
-      min_length: 7  # 最小长度：BTC-USD
+      min_length: 7 # 最小长度：BTC-USD
       max_length: 50
       required_separators: ["-"]
-    
+
     binance:
-      min_length: 6  # 最小长度：BTCUSD
+      min_length: 6 # 最小长度：BTCUSD
       max_length: 50
       required_separators: []
+
+    grvt:
+      min_length: 10 # 最小长度：BTC_USDT_Perp
+      max_length: 50
+      required_separators: ["_"]
 
 # 缓存配置
 cache:
   enabled: true
-  ttl: 3600  # 缓存时间（秒）
-  max_size: 10000  # 最大缓存条目数
+  ttl: 3600 # 缓存时间（秒）
+  max_size: 10000 # 最大缓存条目数
 
 # 日志配置
 logging:
   level: "INFO"
   enable_conversion_log: true
-  enable_performance_log: false 
+  enable_performance_log: false

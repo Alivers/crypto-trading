@@ -11,11 +11,14 @@ from datetime import datetime
 from typing import Dict, List, Optional, Any, Callable
 from decimal import Decimal
 
+import yaml
+
 # Logger will be set by ExchangeAdapter base class
 
 from ...adapter import ExchangeAdapter
 from ...interface import ExchangeConfig
 from ...models import *
+from ...subscription_manager import create_subscription_manager, DataType
 from .grvt_base import GrvtBase
 from .grvt_rest import GrvtRest
 from .grvt_websocket import GrvtWebSocket
@@ -27,7 +30,7 @@ class GrvtAdapter(ExchangeAdapter):
     def __init__(self, config: ExchangeConfig, event_bus=None):
         super().__init__(config, event_bus)
         
-        # 初始化各个模块
+        # 初始化各个模块（直接从ExchangeConfig获取配置）
         self._base = GrvtBase(config)
         self._rest = GrvtRest(config, self.logger)
         self._websocket = GrvtWebSocket(config, self.logger)
@@ -49,6 +52,139 @@ class GrvtAdapter(ExchangeAdapter):
         # 缓存支持的交易对
         self._supported_symbols = []
         self._market_info = {}
+        
+        # 初始化订阅管理器（从ExchangeConfig构建配置字典）
+        try:
+            config_dict = self._build_subscription_config_dict(config)
+            
+            # 获取符号缓存服务实例
+            symbol_cache_service = self._get_symbol_cache_service()
+            
+            self._subscription_manager = create_subscription_manager(
+                exchange_config=config_dict,
+                symbol_cache_service=symbol_cache_service,
+                logger=self.logger
+            )
+            
+            if self.logger:
+                self.logger.info(
+                    f"✅ GRVT订阅管理器初始化成功，模式: {config_dict.get('subscription_mode', {}).get('mode', 'unknown')}"
+                )
+        except Exception as e:
+            if self.logger:
+                self.logger.warning(f"创建GRVT订阅管理器失败，使用默认配置: {e}")
+            # 使用默认配置
+            default_config = self._get_default_config_dict()
+            symbol_cache_service = self._get_symbol_cache_service()
+            self._subscription_manager = create_subscription_manager(
+                exchange_config=default_config,
+                symbol_cache_service=symbol_cache_service,
+                logger=self.logger
+            )
+    
+    def _build_subscription_config_dict(self, config: ExchangeConfig) -> Dict[str, Any]:
+        """从ExchangeConfig构建订阅管理器需要的配置字典"""
+        # 从ExchangeConfig中提取订阅相关配置
+        subscription_mode = getattr(config, 'subscription_mode', 'predefined')
+        data_types = getattr(config, 'data_types', ['ticker', 'orderbook'])
+        symbols = getattr(config, 'symbols', [])
+        predefined_combinations = getattr(config, 'predefined_combinations', {})
+        discovery_settings = getattr(config, 'discovery_settings', {})
+        
+        # 构建配置字典
+        config_dict = {
+            'exchange_id': 'grvt',
+            'subscription_mode': {
+                'mode': subscription_mode,
+            }
+        }
+        
+        if subscription_mode == 'predefined':
+            # 构建数据类型字典
+            data_types_dict = {}
+            if isinstance(data_types, list):
+                for dt in data_types:
+                    data_types_dict[dt] = True
+            else:
+                data_types_dict = data_types
+            
+            config_dict['subscription_mode']['predefined'] = {
+                'symbols': symbols,
+                'data_types': data_types_dict
+            }
+        else:
+            # 动态模式
+            filter_criteria = discovery_settings.get('filters', {})
+            config_dict['subscription_mode']['dynamic'] = {
+                'discovery': {
+                    'enabled': discovery_settings.get('enabled', True),
+                    'filter_criteria': filter_criteria
+                },
+                'data_types': data_types if isinstance(data_types, dict) else {dt: True for dt in data_types},
+                'dynamic_subscription': {
+                    'auto_discover_interval': discovery_settings.get('auto_discover_interval', 600)
+                }
+            }
+        
+        # 添加自定义订阅组合
+        if predefined_combinations:
+            config_dict['custom_subscriptions'] = {
+                'combinations': predefined_combinations,
+                'active_combination': getattr(config, 'active_combination', 'major_coins')
+            }
+        
+        return config_dict
+    
+    def _get_default_config_dict(self) -> Dict[str, Any]:
+        """获取默认配置字典"""
+        return {
+            'exchange_id': 'grvt',
+            'subscription_mode': {
+                'mode': 'predefined',
+                'predefined': {
+                    'symbols': ['BTC_USDT_Perp', 'ETH_USDT_Perp', 'SOL_USDT_Perp'],
+                    'data_types': {'ticker': True, 'orderbook': True, 'trades': False, 'user_data': False}
+                }
+            }
+        }
+    
+    def _get_symbol_cache_service(self):
+        """获取符号缓存服务实例"""
+        try:
+            # 尝试从依赖注入容器获取符号缓存服务
+            from .....di.container import get_container
+            from .....services.symbol_manager.interfaces.symbol_cache import ISymbolCacheService
+            
+            container = get_container()
+            symbol_cache_service = container.get(ISymbolCacheService)
+            
+            if self.logger:
+                self.logger.info("✅ 获取符号缓存服务成功")
+            return symbol_cache_service
+            
+        except Exception as e:
+            if self.logger:
+                self.logger.warning(f"⚠️ 获取符号缓存服务失败: {e}，返回None")
+            return None
+
+    def _load_grvt_config(self) -> Dict[str, Any]:
+        """加载GRVT配置文件"""
+        config_path = "config/exchanges/grvt_config.yaml"
+
+        try:
+            with open(config_path, 'r', encoding='utf-8') as f:
+                config = yaml.safe_load(f)
+                if self.logger:
+                    self.logger.info(f"✅ 加载GRVT配置文件: {config_path}")
+                return config
+        except FileNotFoundError:
+            if self.logger:
+                self.logger.warning(f"GRVT配置文件未找到: {config_path}")
+            return {'exchange_id': 'grvt'}
+        except Exception as e:
+            if self.logger:
+                self.logger.error(f"加载GRVT配置文件失败: {e}")
+            return {'exchange_id': 'grvt'}
     
     async def _do_connect(self) -> bool:
         """连接实现"""
@@ -417,6 +553,20 @@ class GrvtAdapter(ExchangeAdapter):
         """获取交易对信息"""
         grvt_symbol = self._map_symbol(symbol)
         return self._market_info.get(grvt_symbol)
+
+    # ==================== 订阅管理器方法 ====================
+    
+    def get_subscription_manager(self):
+        """获取订阅管理器实例"""
+        return getattr(self, '_subscription_manager', None)
+    
+    def get_subscription_stats(self) -> Dict[str, Any]:
+        """获取订阅统计信息"""
+        if hasattr(self, '_subscription_manager') and self._subscription_manager:
+            return self._subscription_manager.get_subscription_stats()
+        return {}
+    
+    # ==================== 工具方法 ====================
 
     def __str__(self) -> str:
         """字符串表示"""
