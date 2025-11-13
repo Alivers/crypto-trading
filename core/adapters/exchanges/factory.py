@@ -56,6 +56,7 @@ class ExchangeFactory:
             from .adapters.binance import BinanceAdapter
             from .adapters.edgex import EdgeXAdapter
             from .adapters.lighter import LighterAdapter
+            from .adapters.grvt.grvt import GrvtAdapter
 
             # 注册Hyperliquid适配器
             self.register_adapter(
@@ -168,6 +169,29 @@ class ExchangeFactory:
                         "ticker": {"max_requests": 100, "time_window": 60},
                         "orderbook": {"max_requests": 100, "time_window": 60},
                         "trading": {"max_requests": 10, "time_window": 60}
+                    }
+                }
+            )
+
+            # 注册GRVT适配器
+            self.register_adapter(
+                exchange_id="grvt",
+                adapter_class=GrvtAdapter,
+                exchange_type=ExchangeType.PERPETUAL,
+                name="GRVT",
+                description="GRVT永续合约交易所",
+                supported_features=[
+                    "perpetual_trading", "websocket", "orderbook",
+                    "ticker", "ohlcv", "trades", "user_stream"
+                ],
+                default_config={
+                    "testnet": False,
+                    "default_leverage": 1,
+                    "enable_websocket": True,
+                    "rate_limits": {
+                        "ticker": {"max_requests": 100, "time_window": 60},
+                        "orderbook": {"max_requests": 100, "time_window": 60},
+                        "trading": {"max_requests": 50, "time_window": 60}
                     }
                 }
             )
