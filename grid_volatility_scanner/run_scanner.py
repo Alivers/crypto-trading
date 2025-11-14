@@ -178,7 +178,7 @@ async def main():
         '--exchange',
         type=str,
         default='lighter',
-        choices=['lighter', 'hyperliquid', 'backpack', 'binance'],
+        choices=['lighter', 'hyperliquid', 'backpack', 'binance', 'grvt'],
         help='交易所名称（默认: lighter）'
     )
 

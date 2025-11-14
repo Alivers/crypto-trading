@@ -531,23 +531,23 @@ class GrvtRest(GrvtBase):
     
     # ==================== 工具方法 ====================
     
-    def _convert_order_type(self, order_type: OrderType) -> str:
+    def _convert_order_type(self, order_type: OrderType) -> GrvtOrderType:
         """转换订单类型到GRVT格式"""
         if order_type == OrderType.MARKET:
-            return GrvtOrderType.MARKET
+            return 'market'
         elif order_type == OrderType.LIMIT:
-            return GrvtOrderType.LIMIT
+            return 'limit'
         else:
-            return GrvtOrderType.LIMIT
+            return 'limit'
     
-    def _convert_order_side(self, side: OrderSide) -> str:
+    def _convert_order_side(self, side: OrderSide) -> GrvtOrderSide:
         """转换订单方向到GRVT格式"""
         if side == OrderSide.BUY:
-            return GrvtOrderSide.BUY
+            return 'buy'
         elif side == OrderSide.SELL:
-            return GrvtOrderSide.SELL
+            return 'sell'
         else:
-            return GrvtOrderSide.BUY
+            return 'buy'
     
     async def health_check(self) -> Dict[str, Any]:
         """健康检查"""

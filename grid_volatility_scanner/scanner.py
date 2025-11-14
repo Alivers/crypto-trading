@@ -492,7 +492,7 @@ class GridVolatilityScanner:
                         # 🔥 后续symbol：传None复用统一回调
                         await self.adapter.subscribe_ticker(
                             symbol=symbol,
-                            callback=None
+                            callback=unified_ticker_callback
                         )
 
                     subscription_count += 1

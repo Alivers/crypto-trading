@@ -89,9 +89,12 @@ class GrvtWebSocket(GrvtBase):
         try:
             if not self._initialized:
                 await self.initialize()
+
+            self.logger.info(f"✅ GRVT WebSocket 尝试连接: {self.client.endpoint_types}")
             
             # 确保所有端点都已连接
-            await self.client.connect_all_channels()
+            # TODO: 交易channel是另外的，需要cookie和account信息连接
+            await self.client.connect_channel(GrvtWSEndpointType.MARKET_DATA)
             
             self._connected = True
             

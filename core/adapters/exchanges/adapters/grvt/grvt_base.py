@@ -222,19 +222,25 @@ class GrvtBase:
         
         return TickerData(
             symbol=symbol,
-            last=self._safe_decimal(data.get('last') or data.get('lastPrice')),
-            bid=self._safe_decimal(data.get('bid') or data.get('bidPrice')),
-            ask=self._safe_decimal(data.get('ask') or data.get('askPrice')),
-            bid_volume=self._safe_decimal(data.get('bidSize') or data.get('bidQty')),
-            ask_volume=self._safe_decimal(data.get('askSize') or data.get('askQty')),
-            high=self._safe_decimal(data.get('high') or data.get('highPrice')),
-            low=self._safe_decimal(data.get('low') or data.get('lowPrice')),
-            volume=self._safe_decimal(data.get('volume') or data.get('baseVolume')),
-            quote_volume=self._safe_decimal(data.get('quoteVolume')),
-            open=self._safe_decimal(data.get('open') or data.get('openPrice')),
-            close=self._safe_decimal(data.get('close') or data.get('lastPrice')),
-            change=self._safe_decimal(data.get('change') or data.get('priceChange')),
-            percentage=self._safe_decimal(data.get('percentage') or data.get('priceChangePercent')),
+            bid=self._safe_decimal(data.get('best_bid_price') or data.get('bb')),
+            ask=self._safe_decimal(data.get('best_ask_price') or data.get('ba')),
+            bid_size=self._safe_decimal(data.get('best_bid_size') or data.get('bb1')),
+            ask_size=self._safe_decimal(data.get('best_ask_size') or data.get('ba1')),
+
+            last=self._safe_decimal(data.get('last_price') or data.get('lp')),
+            high=self._safe_decimal(data.get('high_price') or data.get('hp')),
+            low=self._safe_decimal(data.get('low_price') or data.get('lp1')),
+            open=self._safe_decimal(data.get('open_price') or data.get('op')),
+            close=self._safe_decimal(data.get('last_price') or data.get('lp')),
+
+            index_price=self._safe_decimal(data.get('index_price') or data.get('ip')),
+            mark_price=self._safe_decimal(data.get('mark_price') or data.get('mp')),
+
+            open_interest=self._safe_decimal(data.get('open_interest') or data.get('oi')),
+
+            funding_rate=self._safe_decimal(data.get('funding_rate') or data.get('fr2')),
+            next_funding_time=self._parse_timestamp(data.get('next_funding_time') or data.get('nf')),
+
             timestamp=timestamp or datetime.now(),
             raw_data=data
         )
