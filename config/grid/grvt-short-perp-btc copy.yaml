@@ -3,7 +3,7 @@ grid_system:
   # 基础配置
   # ============================================================================
   exchange: "grvt"
-  symbol: "BTC"
+  symbol: "BTC_USDT_Perp"
   grid_type: "follow_short" # 网格类型：follow_short(价格移动) | short(固定范围) | martingale_short(马丁)
 
   # ============================================================================
