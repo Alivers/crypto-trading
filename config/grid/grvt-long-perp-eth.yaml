@@ -9,7 +9,7 @@ grid_system:
   # ============================================================================
   # 价格移动网格参数（grid_type = "follow_long"）
   # ============================================================================
-  follow_grid_count: 500 # 网格数量（350格×$0.003=$1.05，避免下限为负）
+  follow_grid_count: 10 # 网格数量（350格×$0.003=$1.05，避免下限为负）
   follow_timeout: 1000000000000 # 脱离超时（秒）
   follow_distance: 2 # 脱离距离（格）
   price_offset_grids: 10 # 价格偏移（格，让当前价格处于网格内部）
@@ -26,7 +26,7 @@ grid_system:
   # 通用网格参数
   # ============================================================================
   grid_interval: 1.5 # 每格间隔
-  order_amount: 0.0065 # 每格基础数量
+  order_amount: 0.01 # 每格基础数量
   quantity_precision: 2 # 数量精度（小数位）
   price_decimals: 2 # 价格精度（小数位）
 
@@ -128,5 +128,5 @@ grid_system:
   health_check_snapshot_count: 2 # 健康检查快照次数（2-5）
   rest_position_query_interval: 120 # REST持仓查询间隔（秒）
   enable_notifications: false # 通知开关
-  fee_rate: 0.00002 # 手续费率（0.002%）
+  fee_rate: 0.00000 # 手续费率（0.002%）
 

@@ -29,7 +29,10 @@ class GrvtAdapter(ExchangeAdapter):
 
     def __init__(self, config: ExchangeConfig, event_bus=None):
         super().__init__(config, event_bus)
-        
+
+        config_file = self._load_grvt_config()
+        config.extra_params = config_file.get('authentication', {})
+
         # 初始化各个模块（直接从ExchangeConfig获取配置）
         self._base = GrvtBase(config)
         self._rest = GrvtRest(config, self.logger)
@@ -176,7 +179,7 @@ class GrvtAdapter(ExchangeAdapter):
                 config = yaml.safe_load(f)
                 if self.logger:
                     self.logger.info(f"✅ 加载GRVT配置文件: {config_path}")
-                return config
+                return config.get('grvt', {})
         except FileNotFoundError:
             if self.logger:
                 self.logger.warning(f"GRVT配置文件未找到: {config_path}")
@@ -319,7 +322,8 @@ class GrvtAdapter(ExchangeAdapter):
         order_type: OrderType,
         amount: Decimal,
         price: Optional[Decimal] = None,
-        params: Optional[Dict[str, Any]] = None
+        params: Optional[Dict[str, Any]] = None,
+        batch_mode: bool = False
     ) -> OrderData:
         """创建订单"""
         order = await self._rest.create_order(symbol, side, order_type, amount, price, params)

@@ -1,23 +1,23 @@
 grvt:
   # 基础配置
-  name: "GRVT"
-  exchange_id: "grvt"
+  name: 'GRVT'
+  exchange_id: 'grvt'
   enabled: true # 🔥 启用GRVT交易所
-  type: "perpetual"
+  type: 'perpetual'
 
   # 📡 订阅模式配置 - 支持硬编码和动态两种模式
   subscription_mode:
     # 订阅模式选择
     # "predefined" - 硬编码模式：使用配置文件中预定义的交易对
     # "dynamic" - 动态模式：从市场获取交易对后订阅
-    mode: "predefined" # 🔥 使用预定义模式
+    mode: 'predefined' # 🔥 使用预定义模式
 
     # 硬编码模式配置
     predefined:
       # 要订阅的交易对列表（GRVT格式：BTC_USDT_Perp）
       symbols:
-        - "BTC_USDT_Perp"
-        - "ETH_USDT_Perp"
+        - 'BTC_USDT_Perp'
+        - 'ETH_USDT_Perp'
 
       # 要订阅的数据类型
       data_types:
@@ -39,12 +39,12 @@ grvt:
         enabled: false
         # 过滤条件
         filter_criteria:
-          market_types: ["perpetual"] # 🔥 只获取永续合约
+          market_types: ['perpetual'] # 🔥 只获取永续合约
           volume_threshold: 500000 # 最小交易量过滤
           max_symbols: 100 # 最大交易对数量
           exclude_symbols: [] # 排除的交易对
-          include_patterns: ["*_Perp"] # 🔥 只包含永续合约模式
-          exclude_patterns: ["*SPOT*", "*TEST*"] # 🔥 排除现货和测试交易对
+          include_patterns: ['*_Perp'] # 🔥 只包含永续合约模式
+          exclude_patterns: ['*SPOT*', '*TEST*'] # 🔥 排除现货和测试交易对
 
       # 要订阅的数据类型
       data_types:
@@ -65,10 +65,10 @@ grvt:
     combinations:
       # 主流币种组合
       major_coins:
-        description: "🔥 主流币种永续合约数据订阅"
+        description: '🔥 主流币种永续合约数据订阅'
         symbols:
-          - "BTC_USDT_Perp"
-          - "ETH_USDT_Perp"
+          - 'BTC_USDT_Perp'
+          - 'ETH_USDT_Perp'
         data_types:
           ticker: true # 🔥 订阅ticker获取价格
           orderbook: true # 🔥 订阅订单簿数据
@@ -77,10 +77,10 @@ grvt:
 
       # 全量数据组合
       full_data:
-        description: "🔥 永续合约全量数据订阅"
+        description: '🔥 永续合约全量数据订阅'
         symbols:
-          - "BTC_USDT_Perp"
-          - "ETH_USDT_Perp"
+          - 'BTC_USDT_Perp'
+          - 'ETH_USDT_Perp'
         data_types:
           ticker: true # 🔥 订阅ticker获取价格
           orderbook: true # 🔥 订阅订单簿数据
@@ -89,10 +89,10 @@ grvt:
 
       # 仅价格数据组合
       price_only:
-        description: "🔥 永续合约价格数据订阅"
+        description: '🔥 永续合约价格数据订阅'
         symbols:
-          - "BTC_USDT_Perp"
-          - "ETH_USDT_Perp"
+          - 'BTC_USDT_Perp'
+          - 'ETH_USDT_Perp'
         data_types:
           ticker: true # 🔥 订阅ticker获取价格
           orderbook: false # 🔥 不订阅订单簿数据
@@ -100,7 +100,7 @@ grvt:
           user_data: false
 
     # 活动的订阅组合
-    active_combination: "major_coins" # 可选值: "major_coins", "full_data", "price_only", "custom"
+    active_combination: 'major_coins' # 可选值: "major_coins", "full_data", "price_only", "custom"
 
     # 自定义组合配置 (当active_combination为"custom"时使用)
     custom:
@@ -113,18 +113,18 @@ grvt:
 
   # API配置
   api:
-    base_url: "https://api.grvt.io" # 生产环境
-    ws_url: "wss://api.grvt.io" # WebSocket生产环境
+    base_url: 'https://api.grvt.io' # 生产环境
+    ws_url: 'wss://api.grvt.io' # WebSocket生产环境
     testnet: false # 是否使用测试网
     timeout: 30
 
   # 认证配置
   # GRVT使用API Key、Private Key和Trading Account ID进行认证
   authentication:
-    method: "ed25519"
-    api_key: "" # 🔥 需要配置：GRVT API Key
-    private_key: "" # 🔥 需要配置：GRVT Private Key (作为api_secret传递)
-    trading_account_id: "" # 🔥 需要配置：GRVT Trading Account ID (在extra_params中传递)
+    method: 'ed25519'
+    api_key: '' # 🔥 需要配置：GRVT API Key
+    private_key: '' # 🔥 需要配置：GRVT Private Key (作为api_secret传递)
+    trading_account_id: '' # 🔥 需要配置：GRVT Trading Account ID (在extra_params中传递)
 
   # 频率限制
   rate_limits:
@@ -144,18 +144,18 @@ grvt:
   precision:
     price:
       default: 6
-      "BTC_USDT_Perp": 0
-      "ETH_USDT_Perp": 0
+      'BTC_USDT_Perp': 0
+      'ETH_USDT_Perp': 0
 
     quantity:
       default: 6
-      "BTC_USDT_Perp": 0
-      "ETH_USDT_Perp": 0
+      'BTC_USDT_Perp': 0
+      'ETH_USDT_Perp': 0
 
   # 符号映射（内部标准格式 -> GRVT格式）
   symbol_mapping:
-    "BTC/USDT": "BTC_USDT_Perp"
-    "ETH/USDT": "ETH_USDT_Perp"
+    'BTC/USDT': 'BTC_USDT_Perp'
+    'ETH/USDT': 'ETH_USDT_Perp'
 
   # 手续费配置
   fees:
@@ -167,7 +167,7 @@ grvt:
     min_order_size: 0.001
     max_order_size: 10000
     default_leverage: 1
-    default_margin_mode: "cross"
+    default_margin_mode: 'cross'
 
   # 市场数据配置
   market_data:
@@ -185,8 +185,8 @@ grvt:
 
     # 订阅黑名单
     blacklisted_symbols:
-      - "TEST_USDT_Perp"
-      - "DEMO_USDT_Perp"
+      - 'TEST_USDT_Perp'
+      - 'DEMO_USDT_Perp'
 
   # 错误处理配置
   error_handling:
@@ -196,8 +196,8 @@ grvt:
 
   # 日志配置
   logging:
-    level: "INFO"
-    format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level: 'INFO'
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
   # 健康检查配置
   health_check:
